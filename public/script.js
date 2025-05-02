@@ -1,4 +1,4 @@
-const sheetURL = "https://docs.google.com/spreadsheets/d/1xwPNJnZ8-Ax_vzlDbDEpJ-cOU8-8E2jg_pkSQ0aZ3uc/gviz/tq?tqx=out:json";
+const sheetURL = "https://docs.google.com/spreadsheets/d/1hCx6kH4ttud8zMSSvmUJG-U6IQUS8ArzNja4zWal4_Q/gviz/tq?tqx=out:json";
 const tableBody = document.querySelector("#sheetTable tbody");
 const updateText = document.getElementById("lastUpdate");
 const fallbackImage = "./src/image/Poke_Ball_Sprite.png";
