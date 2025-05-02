@@ -7,7 +7,7 @@
     body {
       font-family: Arial, sans-serif;
       line-height: 1.6;
-      max-width: 80%;
+      max-width: 90%;
       margin: 2em auto;
       padding: 1em;
       background-color: #f9f9f9;
@@ -32,12 +32,25 @@
 
     .side-by-side > div {
       /* The left div will take 65% of the screen width */
-      width: 62%;
+      width: 58%;
     }
 
     /* The right div will take the remaining 35% */
     .side-by-side > div:nth-child(2) {
-      width: 35%;
+      width: 40%;
+    }
+
+
+    /* Responsive layout for smaller screens */
+    @media (max-width: 1200px) {
+      .side-by-side {
+        flex-direction: column;
+      }
+  
+      .side-by-side > div,
+      .side-by-side > div:nth-child(2) {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -49,10 +62,10 @@
       <table id="sheetTable">
         <thead>
           <tr>
-            <th>ภาพ</th>
-            <th>โปเกมอน</th>
-            <th>โดเนท (บาท)</th>
-            <th>สิทธิ์สุ่ม</th>
+            <th>Pokemon</th>
+            <th>Nickname</th>
+            <th>Donate (THB)</th>
+            <th>Roll</th>
           </tr>
         </thead>
         <tbody></tbody>
