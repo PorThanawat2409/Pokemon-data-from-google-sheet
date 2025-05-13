@@ -37,7 +37,7 @@ async function loadData() {
       }
 
       if (inparty==true){
-        currentParty.push({ name: name, image: imageUrl });
+        currentParty.push({ name: name, image: imageUrl, donate: donate });
       }
 
       const tr = document.createElement("tr");
@@ -74,6 +74,7 @@ async function loadData() {
 
     const nameRow = document.createElement("tr");
     const imageRow = document.createElement("tr");
+    const donateRow = document.createElement("tr");
 
     currentParty.forEach(pokemon => {
       const nameCell = document.createElement("td");
@@ -95,10 +96,18 @@ async function loadData() {
 
       imgCell.appendChild(img);
       imageRow.appendChild(imgCell);
+
+      const donateCell = document.createElement("td"); 
+      donateCell.textContent = pokemon.donate;
+      donateCell.style.textAlign = "center";
+      
+      donateRow.appendChild(donateCell);
+
     });
 
     tableParty.appendChild(nameRow);
     tableParty.appendChild(imageRow);
+    tableParty.appendChild(donateRow);
 
 
     const now = new Date();
