@@ -18,7 +18,7 @@ async function loadData() {
     tableParty.innerHTML = "";
     tableBody.innerHTML = "";
 
-    const currentParty = [{ name: "RasmusHojl", image: `https://img.pokemondb.net/artwork/large/piplup.jpg` }];
+    const currentParty = [];
 
     rows.forEach(row => {
       const cols = row.c;
