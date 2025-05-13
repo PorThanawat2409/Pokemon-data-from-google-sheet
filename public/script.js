@@ -36,7 +36,7 @@ async function loadData() {
         imageUrl = fallbackImage;
       }
 
-      if (inparty){
+      if (inparty==true){
         currentParty.push({ name: name, image: imageUrl });
       }
 
