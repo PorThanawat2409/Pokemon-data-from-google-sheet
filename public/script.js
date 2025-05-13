@@ -53,6 +53,35 @@ async function loadData() {
         <td>${donate}</td>
         <td>${chance}</td>
       `;
+      const donateCell = tr.children[2];
+      const amount = parseFloat(donate);
+
+      donateCell.style.fontWeight = "bold";
+      donateCell.style.textAlign = "center";
+
+      if (amount >= 2000) {
+        donateCell.style.backgroundColor = "#ffcdd2"; // pastel red
+        donateCell.style.color = "#b71c1c";
+      } else if (amount >= 1000) {
+        donateCell.style.backgroundColor = "#ffe0b2"; // pastel orange
+        donateCell.style.color = "#e65100";
+      } else if (amount >= 500) {
+        donateCell.style.backgroundColor = "#e1bee7"; // pastel purple
+        donateCell.style.color = "#6a1b9a";
+      } else if (amount >= 200) {
+        donateCell.style.backgroundColor = "#bbdefb"; // pastel blue
+        donateCell.style.color = "#0d47a1";
+      } else if (amount >= 100) {
+        donateCell.style.backgroundColor = "#b2dfdb"; // pastel cyan
+        donateCell.style.color = "#00695c";
+      } else if (amount >= 20) {
+        donateCell.style.backgroundColor = "#c8e6c9"; // pastel green
+        donateCell.style.color = "#2e7d32";
+      } else {
+        donateCell.style.backgroundColor = "#f5f5f5"; // light gray
+        donateCell.style.color = "#333";
+      }
+
 
       const img = tr.querySelector("img");
       img.onerror = () => {
@@ -122,3 +151,37 @@ async function loadData() {
 
 loadData();
 setInterval(loadData, 180000);
+
+let currentSort = { column: null, ascending: true };
+
+document.querySelectorAll('#sheetTable thead th').forEach((th, index) => {
+  th.style.cursor = "pointer";
+  th.addEventListener('click', () => {
+    sortTableByColumn(index);
+  });
+});
+
+function sortTableByColumn(columnIndex) {
+  const table = document.querySelector("#sheetTable tbody");
+  const rows = Array.from(table.querySelectorAll("tr"));
+  const isAscending = currentSort.column === columnIndex ? !currentSort.ascending : true;
+
+  const sortedRows = rows.sort((a, b) => {
+    const aText = a.children[columnIndex].textContent.trim();
+    const bText = b.children[columnIndex].textContent.trim();
+
+    // Try to parse as number, fallback to string
+    const aVal = isNaN(aText) ? aText.toLowerCase() : parseFloat(aText);
+    const bVal = isNaN(bText) ? bText.toLowerCase() : parseFloat(bText);
+
+    if (aVal < bVal) return isAscending ? -1 : 1;
+    if (aVal > bVal) return isAscending ? 1 : -1;
+    return 0;
+  });
+
+  // Clear and re-append rows
+  table.innerHTML = '';
+  sortedRows.forEach(row => table.appendChild(row));
+
+  currentSort = { column: columnIndex, ascending: isAscending };
+}
