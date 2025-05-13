@@ -1,5 +1,7 @@
 const sheetURL = "/api/sheet";
+const tableParty = document.querySelector("#partyTable");
 const tableBody = document.querySelector("#sheetTable tbody");
+const updateTextParty = document.getElementById("partyText");
 const updateText = document.getElementById("lastUpdate");
 const fallbackImage = "./src/image/Poke_Ball_Sprite.png";
 
@@ -8,15 +10,15 @@ async function loadData() {
     const response = await fetch(sheetURL);
     const text = await response.text();
 
-    // Safely extract JSON from function-wrapped response
-
     if (!text) throw new Error("Invalid Google Sheet response format");
     console.log(text)
     const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
     const rows = json.table.rows;
 
+    tableParty.innerHTML = "";
     tableBody.innerHTML = "";
 
+    const currentParty = [{ name: "RasmusHojl", image: `https://img.pokemondb.net/artwork/large/piplup.jpg` }];
 
     rows.forEach(row => {
       const cols = row.c;
@@ -24,8 +26,7 @@ async function loadData() {
       const donate = cols[1]?.v || 0;
       const chance = cols[2]?.v || 0;
       const pokemonName = cols[3]?.v || "";
-      
-      console.log(pokemonName);
+      const inparty = cols[4]?.v || false;
 
       let imageUrl;
       if (pokemonName) {
@@ -33,6 +34,10 @@ async function loadData() {
         imageUrl = `https://img.pokemondb.net/artwork/large/${cleanedName}.jpg`;
       } else {
         imageUrl = fallbackImage;
+      }
+
+      if (inparty){
+        currentParty.push({ name: name, image: imageUrl });
       }
 
       const tr = document.createElement("tr");
@@ -55,14 +60,53 @@ async function loadData() {
         img.src = fallbackImage;
       };
 
+
       tableBody.appendChild(tr);
     });
+
+    if (currentParty.length === 1){
+      tableParty.style.display = "none";
+      updateTextParty.style.display = "none";
+      // const party = document.createElement("p");
+      // party.textContent = "ไม่สามารถโหลดข้อมูลได้";
+      // tableParty.appendChild(party);
+    }
+
+    const nameRow = document.createElement("tr");
+    const imageRow = document.createElement("tr");
+
+    currentParty.forEach(pokemon => {
+      const nameCell = document.createElement("td");
+      nameCell.textContent = pokemon.name;
+      nameCell.style.textAlign = "center";
+
+      nameRow.appendChild(nameCell);
+
+      const imgCell = document.createElement("td");
+      imgCell.style.width = "120px";
+      imgCell.style.height = "100px";
+      imgCell.style.textAlign = "center";
+
+      const img = document.createElement("img");
+      img.src = pokemon.image;
+      img.alt = pokemon.name || "Pokémon";
+      img.style.width = "70%";
+      // img.style.height = "5%";
+
+      imgCell.appendChild(img);
+      imageRow.appendChild(imgCell);
+    });
+
+    tableParty.appendChild(nameRow);
+    tableParty.appendChild(imageRow);
+
 
     const now = new Date();
     updateText.textContent = `อัปเดตล่าสุด: ${now.toLocaleTimeString()}`;
   } catch (err) {
     console.error("Error loading Google Sheet:", err);
     updateText.textContent = "ไม่สามารถโหลดข้อมูลได้";
+    updateTextParty.style.display = "none";
   }
 }
 
