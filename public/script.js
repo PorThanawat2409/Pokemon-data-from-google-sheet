@@ -84,6 +84,7 @@ async function loadData() {
       nameRow.appendChild(nameCell);
 
       const imgCell = document.createElement("td");
+      imgCell.id = "img";
       // imgCell.style.width = "120px";
       // imgCell.style.height = "120px";
       imgCell.style.textAlign = "center";
@@ -91,7 +92,7 @@ async function loadData() {
       const img = document.createElement("img");
       img.src = pokemon.image;
       img.alt = pokemon.name || "Pokémon";
-      img.style.width = "40%";
+      // img.style.width = "40%";
       // img.style.height = "5%";
 
       imgCell.appendChild(img);

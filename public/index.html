@@ -4,53 +4,115 @@
   <meta charset="UTF-8">
   <title>Penguin Hut Platinum series</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      max-width: 90%;
-      margin: 2em auto;
-      padding: 1em;
-      background-color: #f9f9f9;
-      color: #333;
-    }
-    h1, h2 {color: #2c3e50;}
-    ul {margin-left: 1.2em;}
-    hr {margin: 2em 0; border: none; border-top: 1px solid #ccc;}
-    .emoji {font-size: 1.2em; margin-right: 0.3em;}
-    
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background-color: #f8f8f8; }
+    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap');
 
-    /* Flexbox for side-by-side layout */
+    body {
+      font-family: 'Prompt', sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 1em;
+      background: #e4e4e4;
+      color: #222;
+    }
+
+    h1, h2, h3 {
+      color: #3b4cca; /* Pokémon blue */
+      font-weight: 600;
+    }
+
+    .emoji {
+      font-size: 1.2em;
+      margin-right: 0.3em;
+    }
+
+    /* Table Style - Pokémon colors */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 2em;
+      background-color: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th {
+      background-color: #ffcc00; /* Electric yellow */
+      color: #3b4cca;
+      padding: 14px;
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    img {
+      border-radius: 8px;
+      max-height: 80px;
+      
+    }
+
+    /* Flexbox layout */
     .side-by-side {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
+      gap: 2em;
       margin-bottom: 2em;
     }
 
     .side-by-side > div {
-      /* The left div will take 65% of the screen width */
       width: 58%;
     }
 
-    /* The right div will take the remaining 35% */
     .side-by-side > div:nth-child(2) {
       width: 40%;
     }
 
-
-    /* Responsive layout for smaller screens */
+    /* Responsive */
     @media (max-width: 1200px) {
       .side-by-side {
         flex-direction: column;
       }
-  
-      .side-by-side > div,
-      .side-by-side > div:nth-child(2) {
+      .side-by-side > div {
         width: 100%;
       }
+    }
+
+    ul {
+      margin-left: 1.5em;
+      padding-left: 0;
+      list-style-type: disc;
+    }
+
+    /* p.note {
+      background-color: #fff8e1;
+      padding: 12px;
+      border-left: 4px solid #ffcc00;
+      border-radius: 4px;
+      margin-top: 1em;
+    } */
+
+    /* Highlight titles */
+    /* #partyText, #lastUpdate {
+      color: #b30000;
+      font-weight: 600;
+    } */
+    #partyTable td {
+      padding: 5px;
+      width: 16.66%;
+    }
+
+    td#img {
+      padding: 0;
     }
   </style>
 </head>
