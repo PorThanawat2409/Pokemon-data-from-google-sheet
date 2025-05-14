@@ -32,7 +32,7 @@ async function loadData() {
       let imageUrl;
       if (pokemonName) {
         const cleanedName = pokemonName.toLowerCase().replace(/\s+/g, '');
-        imageUrl = `src/image/Pokemon/${cleanedName}.png`;
+        imageUrl = `./src/image/Pokemon/${cleanedName}.png`;
         // imageUrl = `https://img.pokemondb.net/artwork/large/${cleanedName}.jpg`;
       } else {
         imageUrl = fallbackImage;
