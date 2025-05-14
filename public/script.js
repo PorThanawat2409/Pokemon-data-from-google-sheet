@@ -4,6 +4,7 @@ const tableBody = document.querySelector("#sheetTable tbody");
 const updateTextParty = document.getElementById("partyText");
 const updateText = document.getElementById("lastUpdate");
 const fallbackImage = "./src/image/Poke_Ball_Sprite.png";
+const toggleButton = document.getElementById("toggleTheme");
 
 async function loadData() {
   try {
@@ -31,7 +32,8 @@ async function loadData() {
       let imageUrl;
       if (pokemonName) {
         const cleanedName = pokemonName.toLowerCase().replace(/\s+/g, '');
-        imageUrl = `https://img.pokemondb.net/artwork/large/${cleanedName}.jpg`;
+        imageUrl = `src/image/Pokemon/${cleanedName}.png`;
+        // imageUrl = `https://img.pokemondb.net/artwork/large/${cleanedName}.jpg`;
       } else {
         imageUrl = fallbackImage;
       }
@@ -150,7 +152,7 @@ async function loadData() {
 }
 
 loadData();
-setInterval(loadData, 180000);
+setInterval(loadData, 60000);
 
 let currentSort = { column: null, ascending: true };
 
@@ -185,3 +187,18 @@ function sortTableByColumn(columnIndex) {
 
   currentSort = { column: columnIndex, ascending: isAscending };
 }
+
+// document.getElementById("toggleTheme").addEventListener("click", () => {
+//   document.body.classList.toggle("night-mode");
+// });
+
+toggleButton.addEventListener("click", function () {
+  document.body.classList.toggle("night-mode");
+
+  // Toggle icon
+  if (document.body.classList.contains("night-mode")) {
+      toggleButton.textContent = "☀️Mode";
+  } else {
+      toggleButton.textContent = "🌙Mode";
+  }
+});
