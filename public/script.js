@@ -5,14 +5,86 @@ const updateTextParty = document.getElementById("partyText");
 const updateText = document.getElementById("lastUpdate");
 const fallbackImage = "./src/image/Poke_Ball_Sprite.png";
 const toggleButton = document.getElementById("toggleTheme");
+const seriesSelect = document.getElementById("series");
+
+const customTextContent = {
+  BW: `
+    <h1>Black & White Series Rules</h1>
+    <p>กติกาสำหรับ Black & White ...</p>
+  `,
+  P: `
+    <h1>กติกาโปเกมอนสำหรับการจบเกม</h1>
+      <h3><span class="emoji">🔰</span>โปเกมอนที่ใช้ในการจบเกม (ตัวประมูล / เสาหลัก)</h3>
+      <ul>
+        <li>
+          <strong>โดเนทสูงสุดของตัวประมูล</strong>
+          <br>
+          มีสิทธิ์เลือกเปลี่ยน Starter เป็นตัวอื่นได้
+        </li>
+        <li>
+          <strong>โปเกมอนเสาหลัก 3 ตัว</strong>
+          <br>
+          เมื่อมียอดโดเนทรวมครบ <strong>700 บาท</strong>
+        </li>
+      </ul>
+      <p>หากมี <strong>โปเกมอนเสาหลักครบแล้ว</strong><br>
+      โปเกมอนที่จะถูกสุ่มหลังจบยิมแต่ละแห่ง จะมีเพียง <strong>2 ตัวเท่านั้นต่อยิม</strong></p>
+      <h2><span class="emoji">🎲</span>กฎการสุ่มในแต่ละยิม</h2>
+      <ul>
+        <li>ทุกโดเนท <strong>50 บาท</strong> เลือกโปเกมอนและได้รับสิทธิ์สุ่ม <strong>1 สิทธิ์</strong></li>
+        <li>หากโดเนทครั้งเดียว <strong>200 บาท</strong> จะได้รับสิทธิ์เพิ่ม <strong>+1</strong> (รวมเป็น <strong>5 สิทธิ์</strong>)</li>
+        <li>หากทีมยังไม่เต็ม โปเกมอนที่ได้รับการโดเนทจะ <strong>เข้าทีมทันที</strong></li>
+      </ul>
+      <p><strong>หากทีมเต็มแล้ว</strong> จะทำการสุ่มหลังจากจบยิม ดังนี้:</p>
+      <ul>
+        <li>เมื่อจบยิม โปเกมอนทุกตัวที่ยังไม่เข้าสู่เสาหลัก จะถูก <strong>สุ่มใหม่ทั้งหมด</strong></li>
+        <li>ตัวที่มีสิทธิ์เยอะ มีโอกาสสูงที่จะถูกเลือกเข้าทีม</li>
+        <li>แต่แม้มีแค่ <strong>1 สิทธิ์</strong> ก็มีโอกาสได้เข้าทีมเหมือนกัน! <strong><em>กาชาล้วน ๆ</em></strong></li>
+      </ul>
+      <p>ด้วยกติกานี้ เราจะอยู่กับสตรีมนี้กับยาว ๆ มาสนุกกัน!</p>
+  `
+};
+
+function updateCustomText(series) {
+  const customTextDiv = document.getElementById("customText");
+  if (customTextDiv) {
+    customTextDiv.innerHTML = customTextContent[series] || "";
+  }
+}
+
+// Apply saved theme on page load
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+  document.body.classList.add("night-mode");
+  toggleButton.textContent = "☀️Mode";
+} else {
+  toggleButton.textContent = "🌙Mode";
+}
+
+// Restore saved series selection
+const savedSeries = localStorage.getItem('selectedSeries');
+if (savedSeries && seriesSelect) {
+  seriesSelect.value = savedSeries;
+}
+
+// On page load (after restoring dropdown value)
+updateCustomText(seriesSelect.value);
 
 async function loadData() {
   try {
-    const response = await fetch(sheetURL);
+    // Get the selected value from the dropdown
+    const selectedSeries = seriesSelect.value;
+    console.log('Selected series:', selectedSeries);
+    
+    // Build the URL with the selected series as a query parameter
+    const url = `${sheetURL}?value=${selectedSeries}`;
+    console.log('Fetching from URL:', url);
+    
+    const response = await fetch(url);
     const text = await response.text();
 
     if (!text) throw new Error("Invalid Google Sheet response format");
-    console.log(text)
+    console.log('Response received:', text.substring(0, 100) + '...');
     const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
     const rows = json.table.rows;
 
@@ -95,7 +167,7 @@ async function loadData() {
       tableBody.appendChild(tr);
     });
 
-    if (currentParty.length === 1){
+    if (currentParty.length === 0){
       tableParty.style.display = "none";
       updateTextParty.style.display = "none";
       // const party = document.createElement("p");
@@ -123,6 +195,10 @@ async function loadData() {
       const img = document.createElement("img");
       img.src = pokemon.image;
       img.alt = pokemon.name || "Pokémon";
+      img.onerror = () => {
+        img.onerror = null;
+        img.src = fallbackImage;
+      };
       // img.style.width = "40%";
       // img.style.height = "5%";
 
@@ -144,6 +220,20 @@ async function loadData() {
 
     const now = new Date();
     updateText.textContent = `อัปเดตล่าสุด: ${now.toLocaleTimeString()}`;
+
+    // Calculate total donation
+    let totalDonation = 0;
+    rows.forEach(row => {
+      const cols = row.c;
+      const donate = parseFloat(cols[1]?.v || 0);
+      totalDonation += donate;
+    });
+
+    // Update the totalDonate element
+    const totalDonateElem = document.getElementById("totalDonate");
+    if (totalDonateElem) {
+      totalDonateElem.textContent = `${totalDonation.toLocaleString()} บาท`;
+    }
   } catch (err) {
     console.error("Error loading Google Sheet:", err);
     updateText.textContent = "ไม่สามารถโหลดข้อมูลได้";
@@ -152,7 +242,20 @@ async function loadData() {
 }
 
 loadData();
-setInterval(loadData, 60000);
+setInterval(loadData, 30000);
+
+// Add event listener to series dropdown
+if (seriesSelect) {
+  seriesSelect.addEventListener('change', () => {
+    console.log('Dropdown changed! New value:', seriesSelect.value);
+    localStorage.setItem('selectedSeries', seriesSelect.value);
+    loadData(); // Reload data when series selection changes
+    updateCustomText(seriesSelect.value);
+  });
+  console.log('Event listener added to series dropdown');
+} else {
+  console.error('Cannot add event listener: series dropdown not found');
+}
 
 let currentSort = { column: null, ascending: true };
 
@@ -188,17 +291,16 @@ function sortTableByColumn(columnIndex) {
   currentSort = { column: columnIndex, ascending: isAscending };
 }
 
-// document.getElementById("toggleTheme").addEventListener("click", () => {
-//   document.body.classList.toggle("night-mode");
-// });
-
+// Theme toggle logic
 toggleButton.addEventListener("click", function () {
   document.body.classList.toggle("night-mode");
 
-  // Toggle icon
+  let theme = "light";
   if (document.body.classList.contains("night-mode")) {
-      toggleButton.textContent = "☀️Mode";
+    theme = "dark";
+    toggleButton.textContent = "☀️Mode";
   } else {
-      toggleButton.textContent = "🌙Mode";
+    toggleButton.textContent = "🌙Mode";
   }
+  localStorage.setItem("theme", theme);
 });
