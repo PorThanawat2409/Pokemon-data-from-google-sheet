@@ -10,15 +10,7 @@ app.get('/api/sheet', async (req, res) => {
   try {
     const { value } = req.query;
     let sheetUrl;
-
-    if (value === 'BW') {
-      sheetUrl = process.env.GOOGLE_SHEET_BW;
-    } else if (value === 'P') {
-      sheetUrl = process.env.GOOGLE_SHEET_P;
-    } else {
-      // Default to original URL if no valid value provided
-      sheetUrl = process.env.GOOGLE_SHEET_BW;;
-    }
+    sheetUrl = process.env.GOOGLE_SHEET_URL;
 
     if (!sheetUrl) {
       return res.status(400).send('Invalid sheet selection or missing environment variable');

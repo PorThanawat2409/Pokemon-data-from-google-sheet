@@ -1,35 +1,52 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <title>Penguin Hut BAR HOST series</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/jpeg" href="src/image/penguin_profile.jpg">
 </head>
+
 <body>
-  
-  
+
   <div class="side-by-side">
-    <div>
+    <div id = "pokemon_data">
       <div style="display: flex; justify-content: flex-start;">
         <h1 id="partyText"> ทีมปัจจุบัน </h1>
-        <button id="toggleTheme" style="align-self: center; margin-left: 10px;" >🌙Mode</button>
-        
-        <label for="series">เลือกภาค Penguin Hut เล่น:</label> 
-        <select name="Current series" id="series">  
-          <option value="BW">Black, White</option>
-          <option value="P">Platinum</option>
-        </select>
-
+        <button id="toggleTheme" style="align-self: center; margin-left: 10px;">🌙Mode</button>
       </div>
       <table id="partyTable">
-        
+        <tr>
+          <td style="text-align: center;"></td>
+          <td style="text-align: center;"></td>
+          <td style="text-align: center;"></td>
+          <td style="text-align: center;"></td>
+          <td style="text-align: center;"></td>
+          <td style="text-align: center;"></td>
+        </tr>
+        <tr>
+          <td id="img" style="text-align: center;"><img src="./src/image/Poke_Ball_Sprite.png"> </td>
+          <td id="img" style="text-align: center;"><img src="./src/image/Poke_Ball_Sprite.png"> </td>
+          <td id="img" style="text-align: center;"><img src="./src/image/Poke_Ball_Sprite.png"> </td>
+          <td id="img" style="text-align: center;"><img src="./src/image/Poke_Ball_Sprite.png"> </td>
+          <td id="img" style="text-align: center;"><img src="./src/image/Poke_Ball_Sprite.png"> </td>
+          <td id="img" style="text-align: center;"><img src="./src/image/Poke_Ball_Sprite.png"> </td>
+        </tr>
+        <tr>
+          <td style="text-align: center;">0</td>
+          <td style="text-align: center;">0</td>
+          <td style="text-align: center;">0</td>
+          <td style="text-align: center;">0</td>
+          <td style="text-align: center;">0</td>
+          <td style="text-align: center;">0</td>
+        </tr>
       </table>
       <div style="display: flex; justify-content: flex-start; gap: 32px;">
         <h1>รายการโดเนทโปเกมอน</h1>
         <div style="display: flex; justify-content: flex-start; gap: 10px;">
           <h3>ยอดรวมโดเนท </h3>
-          <h4 id = "totalDonate"> </h4>
+          <h4 id="totalDonate"> </h4>
         </div>
       </div>
       <p id="lastUpdate">กำลังโหลดข้อมูล...</p>
@@ -45,11 +62,43 @@
         <tbody></tbody>
       </table>
     </div>
-    <div id = "customText">
+    <div id="customText">
+      <div class="side-by-side" id="QR_container">
+        <img src="./src/image/penguin_qr.png" alt="QR_code" id="QR">
+        <div>
+          <p> โดเนทเพื่อเพิ่มสิทธิ์ให้กับโปเกมอนที่คุณชอบได้เข้าทีม หรือเลี้ยงกาแฟให้ Penguin Hut ได้โดยตรงผ่าน QR code นี้</p>
+        </div>
+      </div>
+      <h1>กติกาโปเกมอนสำหรับการจบเกม</h1>
+      <h3><span class="emoji">🔰</span>โปเกมอนที่ใช้ในการจบเกม (ตัวประมูล / เสาหลัก)</h3>
+      <ul>
+        <li>
+          <strong>โดเนทสูงสุดของตัวประมูล</strong>
+        </li>
+        <li>
+          <strong>โปเกมอนเสาหลัก 3 ตัว</strong>
+        </li>
+      </ul>
+      <p>หากมีโปเกมอนเสาหลักครบแล้ว<br>
+        โปเกมอนที่จะถูกสุ่มหลังจบยิมแต่ละแห่ง จะมีเพียง 2 ตัวเท่านั้นต่อยิม</p>
       
+      <h3><span class="emoji">🎲</span>กฎการสุ่มในแต่ละยิม</h3>
+      <ul>
+        <li>ทุกโดเนท 50 บาท เลือกโปเกมอนและได้รับสิทธิ์สุ่ม 1 สิทธิ์</li>
+        <li>หากโดเนทครั้งเดียว 200 บาท จะได้รับสิทธิ์เพิ่ม +1 (รวมเป็น 5 สิทธิ์)</li>
+        <li>หากทีมยังไม่เต็ม โปเกมอนที่ได้รับการโดเนทจะ เข้าทีมทันที</li>
+      </ul>
+      <h4> หากทีมเต็มแล้วจะทำการสุ่มหลังจากจบยิม ดังนี้:</h4>
+      <ul>
+        <li>เมื่อจบยิม โปเกมอนทุกตัวที่ยังไม่เข้าสู่เสาหลัก จะถูกสุ่มใหม่ทั้งหมด</li>
+        <li>ตัวที่มีสิทธิ์เยอะ มีโอกาสสูงที่จะถูกเลือกเข้าทีม</li>
+        <li>แต่แม้มีแค่ 1 สิทธิ์ ก็มีโอกาสได้เข้าทีมเหมือนกัน! <em>กาชาล้วน ๆ</em>
+        </li>
+      </ul>
     </div>
   </div>
 
   <script src="script.js"></script>
 </body>
+
 </html>

@@ -7,51 +7,6 @@ const fallbackImage = "./src/image/Poke_Ball_Sprite.png";
 const toggleButton = document.getElementById("toggleTheme");
 const seriesSelect = document.getElementById("series");
 
-const customTextContent = {
-  BW: `
-    <h1>Black & White Series Rules</h1>
-    <p>กติกาสำหรับ Black & White ...</p>
-  `,
-  P: `
-    <h1>กติกาโปเกมอนสำหรับการจบเกม</h1>
-      <h3><span class="emoji">🔰</span>โปเกมอนที่ใช้ในการจบเกม (ตัวประมูล / เสาหลัก)</h3>
-      <ul>
-        <li>
-          <strong>โดเนทสูงสุดของตัวประมูล</strong>
-          <br>
-          มีสิทธิ์เลือกเปลี่ยน Starter เป็นตัวอื่นได้
-        </li>
-        <li>
-          <strong>โปเกมอนเสาหลัก 3 ตัว</strong>
-          <br>
-          เมื่อมียอดโดเนทรวมครบ <strong>700 บาท</strong>
-        </li>
-      </ul>
-      <p>หากมี <strong>โปเกมอนเสาหลักครบแล้ว</strong><br>
-      โปเกมอนที่จะถูกสุ่มหลังจบยิมแต่ละแห่ง จะมีเพียง <strong>2 ตัวเท่านั้นต่อยิม</strong></p>
-      <h2><span class="emoji">🎲</span>กฎการสุ่มในแต่ละยิม</h2>
-      <ul>
-        <li>ทุกโดเนท <strong>50 บาท</strong> เลือกโปเกมอนและได้รับสิทธิ์สุ่ม <strong>1 สิทธิ์</strong></li>
-        <li>หากโดเนทครั้งเดียว <strong>200 บาท</strong> จะได้รับสิทธิ์เพิ่ม <strong>+1</strong> (รวมเป็น <strong>5 สิทธิ์</strong>)</li>
-        <li>หากทีมยังไม่เต็ม โปเกมอนที่ได้รับการโดเนทจะ <strong>เข้าทีมทันที</strong></li>
-      </ul>
-      <p><strong>หากทีมเต็มแล้ว</strong> จะทำการสุ่มหลังจากจบยิม ดังนี้:</p>
-      <ul>
-        <li>เมื่อจบยิม โปเกมอนทุกตัวที่ยังไม่เข้าสู่เสาหลัก จะถูก <strong>สุ่มใหม่ทั้งหมด</strong></li>
-        <li>ตัวที่มีสิทธิ์เยอะ มีโอกาสสูงที่จะถูกเลือกเข้าทีม</li>
-        <li>แต่แม้มีแค่ <strong>1 สิทธิ์</strong> ก็มีโอกาสได้เข้าทีมเหมือนกัน! <strong><em>กาชาล้วน ๆ</em></strong></li>
-      </ul>
-      <p>ด้วยกติกานี้ เราจะอยู่กับสตรีมนี้กับยาว ๆ มาสนุกกัน!</p>
-  `
-};
-
-function updateCustomText(series) {
-  const customTextDiv = document.getElementById("customText");
-  if (customTextDiv) {
-    customTextDiv.innerHTML = customTextContent[series] || "";
-  }
-}
-
 // Apply saved theme on page load
 const savedTheme = localStorage.getItem("theme");
 if (savedTheme === "dark") {
@@ -67,30 +22,20 @@ if (savedSeries && seriesSelect) {
   seriesSelect.value = savedSeries;
 }
 
-// On page load (after restoring dropdown value)
-updateCustomText(seriesSelect.value);
 
 async function loadData() {
   try {
-    // Get the selected value from the dropdown
-    const selectedSeries = seriesSelect.value;
-    console.log('Selected series:', selectedSeries);
-    
-    // Build the URL with the selected series as a query parameter
-    const url = `${sheetURL}?value=${selectedSeries}`;
-    console.log('Fetching from URL:', url);
-    
-    const response = await fetch(url);
+
+    const response = await fetch(sheetURL);
     const text = await response.text();
 
     if (!text) throw new Error("Invalid Google Sheet response format");
     console.log('Response received:', text.substring(0, 100) + '...');
     const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
     const rows = json.table.rows;
-
-    tableParty.innerHTML = "";
+    
     tableBody.innerHTML = "";
-
+      
     const currentParty = [];
 
     rows.forEach(row => {
@@ -100,20 +45,19 @@ async function loadData() {
       const chance = cols[2]?.v || 0;
       const pokemonName = cols[3]?.v || "";
       const inparty = cols[4]?.v || false;
-
+      console.log(name);
       let imageUrl;
       if (pokemonName) {
         const cleanedName = pokemonName.toLowerCase().replace(/\s+/g, '');
         imageUrl = `./src/image/Pokemon/${cleanedName}.png`;
-        // imageUrl = `https://img.pokemondb.net/artwork/large/${cleanedName}.jpg`;
       } else {
         imageUrl = fallbackImage;
       }
 
-      if (inparty==true){
+      if (inparty == true) {
         currentParty.push({ name: name, image: imageUrl, donate: donate });
       }
-
+      
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td style="text-align: center;">
@@ -167,56 +111,51 @@ async function loadData() {
       tableBody.appendChild(tr);
     });
 
-    if (currentParty.length === 0){
-      tableParty.style.display = "none";
-      updateTextParty.style.display = "none";
-      // const party = document.createElement("p");
-      // party.textContent = "ไม่สามารถโหลดข้อมูลได้";
-      // tableParty.appendChild(party);
+  
+    if (currentParty.length === 0) {
+      // No party to display
     }
+    else {
+      const nameRow = document.createElement("tr");
+      const imageRow = document.createElement("tr");
+      const donateRow = document.createElement("tr");
 
-    const nameRow = document.createElement("tr");
-    const imageRow = document.createElement("tr");
-    const donateRow = document.createElement("tr");
-
-    currentParty.forEach(pokemon => {
-      const nameCell = document.createElement("td");
-      nameCell.textContent = pokemon.name;
-      nameCell.style.textAlign = "center";
-
-      nameRow.appendChild(nameCell);
-
-      const imgCell = document.createElement("td");
-      imgCell.id = "img";
-      // imgCell.style.width = "120px";
-      // imgCell.style.height = "120px";
-      imgCell.style.textAlign = "center";
-
-      const img = document.createElement("img");
-      img.src = pokemon.image;
-      img.alt = pokemon.name || "Pokémon";
-      img.onerror = () => {
-        img.onerror = null;
-        img.src = fallbackImage;
-      };
-      // img.style.width = "40%";
-      // img.style.height = "5%";
-
-      imgCell.appendChild(img);
-      imageRow.appendChild(imgCell);
-
-      const donateCell = document.createElement("td"); 
-      donateCell.textContent = pokemon.donate;
-      donateCell.style.textAlign = "center";
+      tableParty.innerHTML = "";
       
-      donateRow.appendChild(donateCell);
+      currentParty.forEach(pokemon => {
+        const nameCell = document.createElement("td");
+        nameCell.textContent = pokemon.name;
+        nameCell.style.textAlign = "center";
 
-    });
+        nameRow.appendChild(nameCell);
 
-    tableParty.appendChild(nameRow);
-    tableParty.appendChild(imageRow);
-    tableParty.appendChild(donateRow);
+        const imgCell = document.createElement("td");
+        imgCell.id = "img";
+        imgCell.style.textAlign = "center";
 
+        const img = document.createElement("img");
+        img.src = pokemon.image;
+        img.alt = pokemon.name || "Pokémon";
+        img.onerror = () => {
+          img.onerror = null;
+          img.src = fallbackImage;
+        };
+
+        imgCell.appendChild(img);
+        imageRow.appendChild(imgCell);
+
+        const donateCell = document.createElement("td");
+        donateCell.textContent = pokemon.donate;
+        donateCell.style.textAlign = "center";
+
+        donateRow.appendChild(donateCell);
+
+      });
+
+      tableParty.appendChild(nameRow);
+      tableParty.appendChild(imageRow);
+      tableParty.appendChild(donateRow);
+    }
 
     const now = new Date();
     updateText.textContent = `อัปเดตล่าสุด: ${now.toLocaleTimeString()}`;
@@ -243,19 +182,6 @@ async function loadData() {
 
 loadData();
 setInterval(loadData, 30000);
-
-// Add event listener to series dropdown
-if (seriesSelect) {
-  seriesSelect.addEventListener('change', () => {
-    console.log('Dropdown changed! New value:', seriesSelect.value);
-    localStorage.setItem('selectedSeries', seriesSelect.value);
-    loadData(); // Reload data when series selection changes
-    updateCustomText(seriesSelect.value);
-  });
-  console.log('Event listener added to series dropdown');
-} else {
-  console.error('Cannot add event listener: series dropdown not found');
-}
 
 let currentSort = { column: null, ascending: true };
 
@@ -304,3 +230,30 @@ toggleButton.addEventListener("click", function () {
   }
   localStorage.setItem("theme", theme);
 });
+
+// Move customText inside pokemon_data under partyTable when screen is small
+function moveCustomText() {
+  const customText = document.getElementById('customText');
+  const pokemonData = document.getElementById('pokemon_data');
+  const partyTable = document.getElementById('partyTable');
+  const sideBySide = document.querySelector('.side-by-side');
+  console.log('test');
+  if (!customText || !pokemonData || !partyTable || !sideBySide) return;
+
+  if (window.innerWidth <= 1200) {
+    // Move inside #pokemon_data below #partyTable
+    if (customText.parentElement !== pokemonData) {
+      pokemonData.insertBefore(customText, partyTable.nextSibling);
+    }
+  } else {
+    // Move back to .side-by-side as second child
+    if (customText.parentElement !== sideBySide) {
+      sideBySide.appendChild(customText);
+    }
+  }
+}
+
+// Run on load and on window resize
+window.addEventListener('resize', moveCustomText);
+document.addEventListener('DOMContentLoaded', moveCustomText);
+

@@ -2,7 +2,7 @@
 
 body {
     font-family: 'Prompt', sans-serif;
-    line-height: 1.6;
+
     margin: 0;
     padding: 1em;
     background: #e4e4e4;
@@ -63,19 +63,18 @@ h1,
 h2,
 h3 {
     color: #3b4cca;
-    /* Pokémon blue */
     font-weight: 600;
     align-self: center;
 }
 
 h4 {
     color: #000000;
-    /* Pokémon blue */
     font-weight: 600;
     align-self: center;
+    margin: 0%;
 }
 
-p{
+p {
     align-self: center;
 }
 
@@ -120,10 +119,15 @@ img {
 
 }
 
+#QR {
+    border-radius: 8px;
+    max-height: 150px;
+}
+
 /* Flexbox layout */
 .side-by-side {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: flex-start;
     gap: 2em;
     margin-bottom: 2em;
@@ -137,19 +141,10 @@ img {
     width: 40%;
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
-    .side-by-side {
-        flex-direction: column;
-    }
 
-    .side-by-side>div {
-        width: 100%;
-    }
-}
 
 ul {
-    margin-left: 1.5em;
+    margin-left: 0em;
     padding-left: 0;
     list-style-type: disc;
 }
@@ -190,6 +185,7 @@ body.night-mode h3 {
     /* bright yellow */
     align-self: center;
 }
+
 body.night-mode h4 {
     color: #ffffff;
     /* Pokémon blue */
@@ -249,4 +245,97 @@ body.night-mode #series:focus {
 
 body.night-mode label[for="series"] {
     color: #ffcc00;
+}
+
+
+
+/* CustomText Section Styling */
+#customText {
+    background: #f8f9fa;
+    padding: 2em 2em 2em 2em;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(60, 60, 60, 0.07);
+    font-size: 1.08em;
+
+    margin-top: 1em;
+    margin-bottom: 1em;
+    color: #222;
+
+}
+
+#customText h1,
+#customText h3 {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+#customText ul {
+    margin-bottom: 1.2em;
+    margin-top: 0.5em;
+    padding-left: 1.5em;
+}
+
+#customText li {
+    margin-bottom: 0.5em;
+    font-size: 1em;
+}
+
+#customText p {
+    margin-bottom: 1.2em;
+    margin-top: 0.5em;
+}
+
+#customText #QR_container {
+    margin: 1.5em 0;
+
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+
+
+    .side-by-side {
+        flex-direction: column;
+    }
+
+    .side-by-side>div {
+        width: 100%;
+        align-self: left;
+    }
+
+    .side-by-side>div:nth-child(2) {
+        width: 100%;
+    }
+
+    #QR_container.side-by-side {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: row;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    #QR {
+        max-height: 200px;
+    }
+
+    #customText {
+
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    }
+}
+
+@media (max-width: 700px) {}
+
+body.night-mode #customText {
+    background: #23272f;
+    color: #eee;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
