@@ -66,6 +66,8 @@ async function loadData() {
             alt="${pokemonName || 'Poké Ball'}" 
             style="max-height: 60px; height: auto;" 
           >
+          <br>
+          ${pokemonName}
         </td>
         <td>${name}</td>
         <td>${donate}</td>
