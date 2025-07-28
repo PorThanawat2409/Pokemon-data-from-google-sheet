@@ -65,6 +65,7 @@ async function loadData() {
             src="${imageUrl}" 
             alt="${pokemonName || 'Poké Ball'}" 
             style="max-height: 60px; height: auto;" 
+            loading="lazy"
           >
           <br>
           ${pokemonName}
