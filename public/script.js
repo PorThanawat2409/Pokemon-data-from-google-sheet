@@ -22,6 +22,7 @@ if (savedSeries && seriesSelect) {
   seriesSelect.value = savedSeries;
 }
 
+let currentSort = JSON.parse(localStorage.getItem('tableSort')) || { column: null, ascending: false };
 
 async function loadData() {
   try {
@@ -176,6 +177,11 @@ async function loadData() {
     if (totalDonateElem) {
       totalDonateElem.textContent = `${totalDonation.toLocaleString()} บาท`;
     }
+    
+    // Apply saved sort if exists
+    if (currentSort.column !== null) {
+      applySavedSort(currentSort.column, currentSort.ascending);
+    }
   } catch (err) {
     console.error("Error loading Google Sheet:", err);
     updateText.textContent = "ไม่สามารถโหลดข้อมูลได้";
@@ -186,7 +192,8 @@ async function loadData() {
 loadData();
 setInterval(loadData, 30000);
 
-let currentSort = { column: null, ascending: true };
+// Restore saved sort state
+
 
 document.querySelectorAll('#sheetTable thead th').forEach((th, index) => {
   th.style.cursor = "pointer";
@@ -195,10 +202,62 @@ document.querySelectorAll('#sheetTable thead th').forEach((th, index) => {
   });
 });
 
-function sortTableByColumn(columnIndex) {
+function updateHeaderIndicators(columnIndex, ascending) {
+  // Remove all sort classes from headers
+  document.querySelectorAll('#sheetTable th').forEach(th => {
+    th.classList.remove('sort-asc', 'sort-desc');
+  });
+  
+  // Add appropriate sort class to current column
+  if (columnIndex !== null && columnIndex !== 0) {
+    const header = document.querySelector(`#sheetTable th:nth-child(${columnIndex + 1})`);
+    if (header) {
+      header.classList.add(ascending ? 'sort-asc' : 'sort-desc');
+    }
+  }
+}
+
+function applySavedSort(columnIndex, ascending) {
+  if (columnIndex === 0) return; // Don't sort the image column
+  
   const table = document.querySelector("#sheetTable tbody");
   const rows = Array.from(table.querySelectorAll("tr"));
-  const isAscending = currentSort.column === columnIndex ? !currentSort.ascending : true;
+  
+  const sortedRows = rows.sort((a, b) => {
+    const aText = a.children[columnIndex].textContent.trim();
+    const bText = b.children[columnIndex].textContent.trim();
+
+    // Try to parse as number, fallback to string
+    const aVal = isNaN(aText) ? aText.toLowerCase() : parseFloat(aText);
+    const bVal = isNaN(bText) ? bText.toLowerCase() : parseFloat(bText);
+
+    if (aVal < bVal) return ascending ? -1 : 1;
+    if (aVal > bVal) return ascending ? 1 : -1;
+    return 0;
+  });
+
+  // Clear and re-append rows
+  table.innerHTML = '';
+  sortedRows.forEach(row => table.appendChild(row));
+  
+  // Update header indicators
+  updateHeaderIndicators(columnIndex, ascending);
+}
+
+function sortTableByColumn(columnIndex) {
+
+  if (columnIndex === 0) {
+    // Reset to original Google Sheet order and clear saved sort
+    currentSort = { column: null, ascending: false };
+    localStorage.removeItem('tableSort');
+    updateHeaderIndicators(null, false);
+    loadData();
+    return;
+  }
+
+  const table = document.querySelector("#sheetTable tbody");
+  const rows = Array.from(table.querySelectorAll("tr"));
+  const isAscending = currentSort.column === columnIndex ? !currentSort.ascending : false;
 
   const sortedRows = rows.sort((a, b) => {
     const aText = a.children[columnIndex].textContent.trim();
@@ -218,6 +277,12 @@ function sortTableByColumn(columnIndex) {
   sortedRows.forEach(row => table.appendChild(row));
 
   currentSort = { column: columnIndex, ascending: isAscending };
+  
+  // Save sort state to localStorage
+  localStorage.setItem('tableSort', JSON.stringify(currentSort));
+  
+  // Update header indicators
+  updateHeaderIndicators(columnIndex, isAscending);
 }
 
 // Theme toggle logic

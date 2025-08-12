@@ -92,12 +92,64 @@ table {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     overflow: hidden;
+    table-layout: fixed;
 }
 
 th {
     background-color: #ffcc00;
     /* Electric yellow */
     color: #3b4cca;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+}
+
+th:hover {
+    background-color: #ffd633;
+}
+
+th.sortable::after {
+    content: '↕';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    width: 20px;
+    text-align: center;
+}
+
+th.sortable:hover::after {
+    opacity: 1;
+}
+
+th.sort-asc::after {
+    content: '↑';
+    opacity: 1;
+    color: #2e7d32;
+    width: 20px;
+    text-align: center;
+}
+
+th.sort-desc::after {
+    content: '↓';
+    opacity: 1;
+    color: #d32f2f;
+    width: 20px;
+    text-align: center;
+}
+
+/* Ensure Roll column has adequate width */
+#sheetTable th:last-child,
+#sheetTable td:nth-child(4) {
+    min-width: 80px;
+    width: 80px;
+}
+
+th {
     padding: 14px;
     font-weight: 600;
     font-size: 1.1em;
