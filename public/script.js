@@ -35,11 +35,17 @@ async function loadData() {
     const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
     const rows = json.table.rows;
     
+    // Filter out rows where columns 0-3 are all null
+    const filteredRows = rows.filter(row => {
+      const cols = row.c;
+      return !(cols[0]?.v == null && cols[1]?.v == null && cols[2]?.v == null && cols[3]?.v == null);
+    });
+    
     tableBody.innerHTML = "";
       
     const currentParty = [];
 
-    rows.forEach(row => {
+    filteredRows.forEach(row => {
       const cols = row.c;
       const name = cols[0]?.v || "";
       const donate = cols[1]?.v || 0;
@@ -166,7 +172,7 @@ async function loadData() {
 
     // Calculate total donation
     let totalDonation = 0;
-    rows.forEach(row => {
+    filteredRows.forEach(row => {
       const cols = row.c;
       const donate = parseFloat(cols[1]?.v || 0);
       totalDonation += donate;
