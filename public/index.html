@@ -1,111 +1,138 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ติดตามยอดโดเนทโปเกมอนใน Penguin Hut BAR HOST series แบบเรียลไทม์">
   <title>Penguin Hut BAR HOST series</title>
-  <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/jpeg" href="src/image/penguin_profile.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="night-mode">
 
-  <div class="side-by-side">
-    <div id = "pokemon_data">
-      <div style="display: flex; justify-content: flex-start;">
-        <h1 id="partyText"> ทีมปัจจุบัน </h1>
-        <button id="toggleTheme" style="align-self: center; margin-left: 10px;">🌙Mode</button>
-      </div>
-      <table id="partyTable">
-        <tr>
-          <td style="text-align: center;"></td>
-          <td style="text-align: center;"></td>
-          <td style="text-align: center;"></td>
-          <td style="text-align: center;"></td>
-          <td style="text-align: center;"></td>
-          <td style="text-align: center;"></td>
-        </tr>
-        <tr>
-          <td id="img" style="text-align: center;"><img src="./src/image/Poke_Ball_Sprite.png"> </td>
-          <td id="img" style="text-align: center;"><img src="./src/image/Poke_Ball_Sprite.png"> </td>
-          <td id="img" style="text-align: center;"><img src="./src/image/Poke_Ball_Sprite.png"> </td>
-          <td id="img" style="text-align: center;"><img src="./src/image/Poke_Ball_Sprite.png"> </td>
-          <td id="img" style="text-align: center;"><img src="./src/image/Poke_Ball_Sprite.png"> </td>
-          <td id="img" style="text-align: center;"><img src="./src/image/Poke_Ball_Sprite.png"> </td>
-        </tr>
-        <tr>
-          <td style="text-align: center;">0</td>
-          <td style="text-align: center;">0</td>
-          <td style="text-align: center;">0</td>
-          <td style="text-align: center;">0</td>
-          <td style="text-align: center;">0</td>
-          <td style="text-align: center;">0</td>
-        </tr>
-      </table>
-      <div style="display: flex; justify-content: flex-start; gap: 32px;">
-        <h1>รายการโดเนทโปเกมอน</h1>
-        <div style="display: flex; justify-content: flex-start; gap: 10px;">
-          <h3>ยอดรวมโดเนท </h3>
-          <h4 id="totalDonate"> </h4>
+
+  <!-- Sticky Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <img src="src/image/penguin_profile.jpg" alt="Penguin Hut" class="header-avatar">
+        <div class="header-title-group">
+          <span class="header-title">Penguin Hut</span>
+          <span class="header-subtitle">BAR HOST series</span>
         </div>
       </div>
-      <p id="lastUpdate">กำลังโหลดข้อมูล...</p>
-      <table id="sheetTable">
-        <thead>
-          <tr>
-            <th class="sortable" data-column="pokemon">Pokemon</th>
-            <th class="sortable" data-column="name">Nickname</th>
-            <th class="sortable" data-column="donate">Donate (THB)</th>
-            <th class="sortable" data-column="roll">Roll</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <div id="customText">
-      <div class="side-by-side" id="QR_container">
-        <img src="./src/image/penguin_qr.png" alt="QR_code" id="QR">
-        <div>
-          <p> โดเนทเพื่อเพิ่มสิทธิ์ให้กับโปเกมอนที่คุณชอบได้เข้าทีม หรือเลี้ยงน้ำขมให้ Penguin Hut ได้โดยตรงผ่าน QR code นี้</p>
-        </div>
+      <div class="header-actions">
+<button id="toggleTheme" aria-label="Toggle theme">🌙 Dark</button>
       </div>
-      <h1>กติกาโปเกมอนสำหรับการจบเกม</h1>
-      <h3><span class="emoji">🔰</span>โปเกมอนที่ใช้ในการจบเกม (ตัวประมูล / เสาหลัก)</h3>
-      <ul>
-        <li>
-          <strong>โดเนทสูงสุดของ Starter </strong>
-        </li>
-        <li>
-          <strong>โปเกมอนเสาหลัก 3 ตัว</strong>
-        </li>
-        <li>
-          <strong>Shiny Clause (หากเจอ Shiny จับมาใช้ได้เสมอ)<strong>
-        </li>
-      </ul>
-      <p>หากมีโปเกมอนเสาหลักครบแล้ว<br>
-        โปเกมอนที่จะถูกสุ่มหลังจบยิมแต่ละแห่ง จะมีเพียง 2 ตัวเท่านั้นต่อยิม</p>
-      
-      <h3><span class="emoji">🎲</span>กฎการสุ่มในแต่ละยิม</h3>
-      <ul>
-        <li>ทุกโดเนท 50 บาท เลือกโปเกมอนและได้รับสิทธิ์สุ่ม 1 สิทธิ์</li>
-        <li>หากโดเนทครั้งเดียว 200 บาท จะได้รับสิทธิ์เพิ่ม +1 (รวมเป็น 5 สิทธิ์)</li>
-        <li>หากทีมยังไม่เต็ม โปเกมอนที่ได้รับการโดเนทจะ เข้าทีมทันที</li>
-      </ul>
-      <h3> หากทีมเต็มแล้วจะทำการสุ่มหลังจากจบยิม ดังนี้:</h3>
-      <ul>
-        <li>เมื่อจบยิม โปเกมอนทุกตัวที่ยังไม่เข้าสู่เสาหลัก จะถูกสุ่มใหม่ทั้งหมด</li>
-        <li>ตัวที่มีสิทธิ์เยอะ มีโอกาสสูงที่จะถูกเลือกเข้าทีม</li>
-        <li>แต่แม้มีแค่ 1 สิทธิ์ ก็มีโอกาสได้เข้าทีมเหมือนกัน! <em>กาชาล้วน ๆ</em>
-        </li>
-      </ul>
-      <h3>Challenge ทายโปเกมอนของหัวหน้ายิม by KShiroe (คุณบิ๊ก)</h3>
-      <ul>
-        <li>ทายโปเกมอนถูกได้ 100 บาท</li>
-        <li>ทายโปเกมอน+เลเวลถูกได้ 250 บาท</li>
-        <li> ใช้ตัวช่วยเปิด Pokedex เพื่อตัดช้อยส์ -50 บาท</li>
-      </ul>
     </div>
-  </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="layout-grid">
+
+      <!-- Left Column -->
+      <section id="pokemon_data" class="col-main">
+
+        <!-- Party Card -->
+        <div class="card party-card">
+          <div class="card-header">
+            <h1 id="partyText">🏆 ทีมปัจจุบัน</h1>
+            <span class="total-badge">ยอดรวม: <strong id="totalDonate">—</strong></span>
+          </div>
+          <div id="partySlots" class="party-slots"></div>
+        </div>
+
+        <!-- Donation Table Card -->
+        <div class="card table-card">
+          <div class="card-header">
+            <h2>🎁 รายการโดเนทโปเกมอน</h2>
+            <div class="search-wrapper">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="searchInput" class="search-input"
+                placeholder="ค้นหา Pokémon หรือชื่อ..." aria-label="Search">
+            </div>
+          </div>
+          <p id="lastUpdate" class="last-update">กำลังโหลดข้อมูล...</p>
+          <div class="table-wrapper">
+            <table id="sheetTable">
+              <thead>
+                <tr>
+                  <th class="sortable" data-column="pokemon">Pokemon</th>
+                  <th class="sortable" data-column="name">Nickname</th>
+                  <th class="sortable" data-column="donate">Donate (THB)</th>
+                  <th class="sortable" data-column="roll">Roll</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Column -->
+      <aside id="customText" class="col-side">
+
+        <!-- QR Card -->
+        <div class="card qr-card">
+          <div class="qr-inner">
+            <img src="./src/image/penguin_qr.png" alt="QR code สำหรับโดเนท" id="QR">
+            <p>โดเนทเพื่อเพิ่มสิทธิ์ให้กับโปเกมอนที่คุณชอบได้เข้าทีม หรือเลี้ยงน้ำขมให้ Penguin Hut ได้โดยตรงผ่าน QR code นี้</p>
+          </div>
+        </div>
+
+        <!-- Rules Card -->
+        <div class="card rules-card">
+          <h2>📋 กติกาโปเกมอนสำหรับการจบเกม</h2>
+
+          <div class="rule-section">
+            <h3><span class="emoji">🔰</span>โปเกมอนที่ใช้ในการจบเกม</h3>
+            <ul>
+              <li><strong>โดเนทสูงสุดของ Starter</strong></li>
+              <li><strong>โปเกมอนเสาหลัก 3 ตัว</strong></li>
+              <li><strong>Shiny Clause (หากเจอ Shiny จับมาใช้ได้เสมอ)</strong></li>
+            </ul>
+            <p class="rule-note">หากมีโปเกมอนเสาหลักครบแล้ว<br>โปเกมอนที่จะถูกสุ่มหลังจบยิมแต่ละแห่ง จะมีเพียง 2 ตัวเท่านั้นต่อยิม</p>
+          </div>
+
+          <div class="rule-section">
+            <h3><span class="emoji">🎲</span>กฎการสุ่มในแต่ละยิม</h3>
+            <ul>
+              <li>ทุกโดเนท 50 บาท เลือกโปเกมอนและได้รับสิทธิ์สุ่ม 1 สิทธิ์</li>
+              <li>หากโดเนทครั้งเดียว 200 บาท จะได้รับสิทธิ์เพิ่ม +1 (รวมเป็น 5 สิทธิ์)</li>
+              <li>หากทีมยังไม่เต็ม โปเกมอนที่ได้รับการโดเนทจะ เข้าทีมทันที</li>
+            </ul>
+          </div>
+
+          <div class="rule-section">
+            <h3>หากทีมเต็มแล้วจะทำการสุ่มหลังจากจบยิม ดังนี้:</h3>
+            <ul>
+              <li>เมื่อจบยิม โปเกมอนทุกตัวที่ยังไม่เข้าสู่เสาหลัก จะถูกสุ่มใหม่ทั้งหมด</li>
+              <li>ตัวที่มีสิทธิ์เยอะ มีโอกาสสูงที่จะถูกเลือกเข้าทีม</li>
+              <li>แต่แม้มีแค่ 1 สิทธิ์ ก็มีโอกาสได้เข้าทีมเหมือนกัน! <em>กาชาล้วน ๆ</em></li>
+            </ul>
+          </div>
+
+          <div class="rule-section">
+            <h3>🏅 Challenge ทายโปเกมอนของหัวหน้ายิม</h3>
+            <p class="challenge-credit">by KShiroe (คุณบิ๊ก)</p>
+            <ul>
+              <li>ทายโปเกมอนถูกได้ <strong class="reward">100 บาท</strong></li>
+              <li>ทายโปเกมอน+เลเวลถูกได้ <strong class="reward">250 บาท</strong></li>
+              <li>ใช้ตัวช่วยเปิด Pokedex เพื่อตัดช้อยส์ <strong class="penalty">-50 บาท</strong></li>
+            </ul>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </main>
 
   <script src="script.js"></script>
 </body>
