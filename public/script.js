@@ -104,20 +104,20 @@ async function loadData() {
       tr.style.animationDelay = `${idx * 0.03}s`;
 
       tr.innerHTML = `
-        <td>
+        <td data-sort="${pokemonName}">
           <div class="pokemon-cell">
             <img src="${imageUrl}" alt="${pokemonName || 'Poké Ball'}" loading="lazy">
             <span class="pokemon-name">${pokemonName}</span>
           </div>
         </td>
-        <td>${rankBadge ? `<span class="rank-badge">${rankBadge}</span>` : ""}${name}</td>
-        <td>
+        <td data-sort="${name}">${rankBadge ? `<span class="rank-badge">${rankBadge}</span>` : ""}${name}</td>
+        <td data-sort="${donate}">
           <div class="donate-cell ${tier.cls}">
             <span class="donate-amount">${donate.toLocaleString()}</span>
             <div class="donate-bar"><div class="donate-bar-fill" style="width:${pct}%"></div></div>
           </div>
         </td>
-        <td>${chance}</td>
+        <td data-sort="${chance}">${chance}</td>
       `;
 
       tr.querySelector("img").onerror = function () {
@@ -133,7 +133,6 @@ async function loadData() {
       currentParty.forEach((poke, i) => {
         const slot = document.createElement("div");
         slot.className = "party-slot";
-        slot.style.animationDelay = `${i * 0.08}s`;
         slot.innerHTML = `
           <img src="${poke.image}" alt="${poke.name}" loading="lazy">
           <span class="slot-name">${poke.name}</span>
@@ -150,7 +149,6 @@ async function loadData() {
       for (let i = 0; i < 6; i++) {
         const slot = document.createElement("div");
         slot.className = "party-slot";
-        slot.style.animationDelay = `${i * 0.06}s`;
         slot.innerHTML = `<img src="${fallbackImage}" alt="Empty slot">`;
         partySlotsEl.appendChild(slot);
       }
@@ -176,7 +174,7 @@ async function loadData() {
 }
 
 loadData();
-setInterval(loadData, REFRESH_INTERVAL * 1000);
+setInterval(loadData, 30000);
 
 // ─── Live Search ─────────────────────────────────────────
 function applySearch() {
@@ -207,10 +205,15 @@ function updateHeaderIndicators(colIndex, asc) {
 
 function sortRows(rows, colIndex, ascending) {
   return rows.sort((a, b) => {
-    const aRaw = a.children[colIndex]?.textContent.trim() ?? "";
-    const bRaw = b.children[colIndex]?.textContent.trim() ?? "";
-    const aVal = isNaN(aRaw) || aRaw === "" ? aRaw.toLowerCase() : parseFloat(aRaw);
-    const bVal = isNaN(bRaw) || bRaw === "" ? bRaw.toLowerCase() : parseFloat(bRaw);
+    const aTd = a.children[colIndex];
+    const bTd = b.children[colIndex];
+    // Prefer data-sort (raw value) over textContent
+    const aRaw = (aTd?.dataset.sort ?? aTd?.textContent ?? "").trim();
+    const bRaw = (bTd?.dataset.sort ?? bTd?.textContent ?? "").trim();
+    const aNum = parseFloat(aRaw);
+    const bNum = parseFloat(bRaw);
+    const aVal = !isNaN(aNum) ? aNum : aRaw.toLowerCase();
+    const bVal = !isNaN(bNum) ? bNum : bRaw.toLowerCase();
     if (aVal < bVal) return ascending ? -1 : 1;
     if (aVal > bVal) return ascending ? 1 : -1;
     return 0;

@@ -251,8 +251,6 @@ body::before {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   transition: all 0.3s ease;
-  animation: slideUp 0.5s ease forwards;
-  opacity: 0;
 }
 
 .party-slot:hover {
@@ -623,7 +621,7 @@ th.sort-desc::after { content: '↓'; opacity: 1; color: #f87171; }
 
   .refresh-indicator { display: none; }
 
-  .qr-card .qr-inner { flex-direction: column; align-items: flex-start; }
+  .qr-card .qr-inner { flex-direction: column; align-items: center; text-align: center; }
 }
 
 /* Light mode overrides for rules */
